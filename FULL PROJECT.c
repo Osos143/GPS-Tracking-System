@@ -5,7 +5,7 @@
 #include <stdlib.h>    // Standard library functions
 #include <stdio.h>     // Standard input/output functions
 #include <math.h>      // Math functions
-#include "tm4c123gh6pm.h" // Header file for the TM4C123 microcontroller
+#include "tm4c123gh6pm.h" 
 
 #define RS 0x01        // Bit mask for LCD RS pin
 #define RW 0x02        // Bit mask for LCD RW pin
