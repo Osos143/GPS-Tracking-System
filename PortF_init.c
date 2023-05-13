@@ -1,7 +1,7 @@
-#include "main.h" ;
+#include "main.h" 
 
 /**
- * Initializes Port F for input and output.
+ * Initializes port f for input and output.
  */
 void PortF_Init(void)
 { 
@@ -23,7 +23,7 @@ void PortF_Init(void)
     // Configure PF4-0 as GPIO
     GPIO_PORTF_PCTL_R = 0x00000000;
 
-    // Configure PF4, PF0 as input and PF3, PF2, PF1 as output
+    // CONFIGURE PF4, PF0 as input and PF3, PF2, PF1 as output
     GPIO_PORTF_DIR_R = 0x0E;
 
     // Disable alternate function on Port F
