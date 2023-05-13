@@ -22,7 +22,7 @@ float degrees_to_radians(float degrees)
  */
 float haversine(float lat1, float lon1, float lat2, float lon2)
 {
-    float dlat, dlon, a, c, d;
+   
 
     // Convert latitude and longitude to decimal degrees format
     lat1 = GPStoDeg(lat1);
