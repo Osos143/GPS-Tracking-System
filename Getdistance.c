@@ -20,7 +20,7 @@ float degrees_to_radians(float degrees)
  * @param lon2 The longitude of the second point in degrees.
  * @return The distance between the two points in meters.
  */
-float haversine(float lat1, float lon1, float lat2, float lon2)
+
 {
     float dlat, dlon, a, c, d;
 
