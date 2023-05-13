@@ -6,7 +6,7 @@
  * @param degrees The value in degrees to convert.
  * @return The converted value in radians.
  */
-float degrees_to_radians(float degrees)
+float degrees_to_radians(float
 {
     return degrees * PI / 180.0;
 }
