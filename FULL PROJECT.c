@@ -1,29 +1,31 @@
-#include "TM4C123.h"    
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include "tm4c123gh6pm.h"
-#define RS 0x01
-#define RW 0x02
-#define EN 0x04
+#include "TM4C123.h"   // Header file for the TM4C123 microcontroller
+#include <stdint.h>    // Standard integer data types
+#include <stdbool.h>   // Standard boolean data type
+#include <string.h>    // String handling functions
+#include <stdlib.h>    // Standard library functions
+#include <stdio.h>     // Standard input/output functions
+#include <math.h>      // Math functions
+#include "tm4c123gh6pm.h" // Header file for the TM4C123 microcontroller
 
-#define PI 3.141592653589793238
-#define EARTH_RADIUS 6371000.0 
+#define RS 0x01        // Bit mask for LCD RS pin
+#define RW 0x02        // Bit mask for LCD RW pin
+#define EN 0x04        // Bit mask for LCD EN pin
 
-char GPS_logName[]="$GPRMC,";
-char GPS[80] ;
-char Valid [1];
-char N_or_S [1];
-char E_or_W [1];
-float currentLong, currentLat,speed ;
-char lat [20]={0} ;
- char longi [20]={0} ;
- char speedd [10]={0} ;
- 
-//Functions Declaration
+#define PI 3.141592653589793238  // Value of pi
+#define EARTH_RADIUS 6371000.0   // Mean radius of the Earth in meters
+
+// Define variables to hold data from GPS module
+char GPS_logName[]="$GPRMC,";  // GPS command string
+char GPS[80];                  // Buffer to hold GPS data
+char Valid[1];                 // Validity of GPS data
+char N_or_S[1];                // North or South hemisphere
+char E_or_W[1];                // East or West hemisphere
+float currentLong, currentLat,speed; // Current longitude, latitude, and speed
+char lat[20]={0};              // Buffer to hold latitude data
+char longi[20]={0};            // Buffer to hold longitude data
+char speedd[10]={0};           // Buffer to hold speed data
+
+// Function declarations
 void delayUs(int);
 void delayMs(int);
 void LCD4bits_Init(void);
@@ -31,100 +33,103 @@ void LCD_Write4bits(unsigned char, unsigned char);
 void LCD_WriteString(char*);
 void LCD4bits_Cmd(unsigned char);
 void LCD4bits_Data(unsigned char);
- 
+
+// Function to output a character through UART
 void UART_OutChar(char data) {
-    while ((UART0_FR_R & 0x20) != 0);
-    UART0_DR_R = data;
-}	 
+    while ((UART0_FR_R & 0x20) != 0); // Wait until UART is ready to transmit
+    UART0_DR_R = data;                // Write the character to the UART data register
+}
 
+// Function to read a character from UART
 char UART_InChar(void) {
-    while ((UART0_FR_R & 0x10) != 0);
-		return (char)(UART0_DR_R & 0xFF);
+    while ((UART0_FR_R & 0x10) != 0); // Wait until there is data in the UART receive buffer
+    return (char)(UART0_DR_R & 0xFF); // Read the received character from the UART data register
 }
 
+// Function to read a command from UART with a specified length
 void getCommandd(char *command , int len ){ 
-		char character ;
-		int i ;
-		for(i=0 ; i<len ; i++){
-				character=UART_InChar();
-				if( character!='\r'){
-						command[i]=character ;
-						UART_OutChar(command[i]) ;
-				}else if (character=='\r' || i==len ){
-						break ;
-				}
-				
-		}
-	
-}
- 
- void getCommand(char *command , char stopchar ){ 
-		char character [1] ;
-		int i = 0  ;
-		while(1){
-				getCommandd(character,1);
-				if( character[0]!=stopchar){
-						command[i]=character[0] ;
-					  i++ ;
-						//UART_OutChar(command[i]) ;
-				}else if (character[0]==stopchar ){
-						break ;
-				}
-				
-		}
-	
-}
- 	
-double GPStoDeg(double val)
-{
-	return (int)(val / 100) + (val - (int)(val / 100) * 100) / 60.0;
-    
-} //before lat and long is passet to get_distance 
-
-void GPS_read2(){
-	char counter =0 ;
-	char  recievedChar [1];
-	char i=0 ;
-	char flag =1 ;
-	char c [1];
-	do{
-		getCommandd(c,1);
-		while(c[0]!=GPS_logName[i]){
-			memset(c,0,1);
-			getCommandd(c,1);
-		}
-		i++;
-		}while(i!=7);
-	while(1){
-			if(flag){
-				
-				
-				getCommandd(recievedChar,1);
-				if(recievedChar[0]==','){counter++;}
-			}
-			switch(counter){
-				case 1 : getCommandd(Valid,1); break ;
-				case 2 : getCommand(lat,',');counter++;flag=0;break;
-				case 3 : getCommandd(N_or_S,1);flag=1;break;
-				case 4 : getCommand(longi,',');counter++;flag=0;break;
-				case 5 : getCommandd(E_or_W,1);flag=1;break;
-				case 6 : getCommand(speedd,',');counter++;flag=0;break;
-			
-			}
-			if(counter==7) break;
-	
-	}
-	if(N_or_S[0]=='N')
-						currentLat=atof(lat);
-					else
-						currentLat=-atof(lat) ;
-	if(E_or_W[0]=='E')
-						currentLong=atof(longi);
-					else
-						currentLong=-atof(longi);
-
+    char character;
+    int i;
+    for(i=0 ; i<len ; i++){
+        character = UART_InChar(); // Read a character from the UART
+        if(character != '\r') {    // Check if the character is not the carriage return character
+            command[i] = character; // Store the character in the given buffer
+            UART_OutChar(command[i]); // Output the character back to the UART
+        } else if (character == '\r' || i == len) {
+            break;  // If the character is the carriage return character or the length of the buffer is reached, break out of the loop
+        }
+    }
 }
 
+// Function to read a command from UART until a specified character is encountered
+void getCommand(char *command , char stopchar ){ 
+    char character[1];
+    int i = 0;
+    while(1) {
+        getCommandd(character,1);   // Read a character from the UART
+        if(character[0] != stopchar) {
+            command[i] = character[0]; // Store the character in the given buffer
+            i++;
+        } else if (character[0] == stopchar) {
+            break;  // If the character is the stop character, break out of the loop
+        }
+    }
+}
+
+// Function to convert GPS coordinates from degrees and minutes to decimal degrees
+double GPStoDeg(double val) {
+    return (int)(val / 100) + (val - (int)(val / 100) * 100) / 60.0; // Convert the given GPS coordinate from degrees and minutes to decimal degrees
+}
+
+// Function to read data from GPS module and extract latitude, longitude, and speed
+void GPS_read2() {
+    char counter = 0;
+    char recievedChar[1];
+    char i = 0;
+    char flag = 1;
+    char c[1];
+
+    // Loop until the GPS command is found in the incoming data
+    do {
+        getCommandd(c,1);    // Read a character from the UART
+        while(c[0] != GPS_logName[i]) { // Check if the character matches the current character in the GPS command string
+            memset(c,0,1);              // Clear the character buffer
+            getCommandd(c,1);           // Read a new character from the UART
+        }
+        i++;
+    } while(i != 7);
+
+    // Loop until all necessary data has been extracted from the GPS string
+    while(1) {
+        if(flag) {
+            getCommandd(recievedChar,1); // Read a character from the UART
+            if(recievedChar[0] == ',') { // Check if the character is a comma
+                counter++;              // Increment the counter
+            }
+        }
+        switch(counter) {
+            case 1: getCommandd(Valid,1); break; // Read the validity of the GPS data
+            case 2: getCommand(lat,','); counter++; flag=0; break; // Read the latitude
+            case 3: getCommandd(N_or_S,1); flag=1; break; // Read the hemisphere of the latitude
+            case 4: getCommand(longi,','); counter++; flag=0; break; // Read the longitude
+            case 5: getCommandd(E_or_W,1); flag=1; break; // Read the hemisphere of the longitude
+            case 6: getCommand(speedd,','); counter++; flag=0; break; // Read the speed
+        }
+        if(counter == 7) break; // If all necessary data has been extracted, break out of the loop
+    }
+
+    // Convert latitude and longitude from degrees and minutes to decimal degrees
+    if(N_or_S[0] == 'N') {
+        currentLat = atof(lat); // Convert the latitude to a floating-point value
+    } else {
+        currentLat = -atof(lat); // Convert the latitude to a floating-point value and negate it
+    }
+    if(E_or_W[0] == 'E') {
+        currentLong = atof(longi); // Convert the longitude to a floating-point value
+    } else {
+        currentLong = -atof(longi); // Convert the longitude to a floating-point value and negate it
+    }
+}
 void PortF_Init(void){ 
  SYSCTL_RCGCGPIO_R |= 0x20; // activate clock for Port F 
  while((SYSCTL_PRGPIO_R&0x20) == 0){}; // wait for clock to stabilize 
