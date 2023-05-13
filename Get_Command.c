@@ -7,12 +7,12 @@
  */
 void getCommandd(char *command, int len)
 {
-    char character;
+    char character; // variable to hold each character read from UART
     int i;
 
-    for (i = 0; i < len; i++)
+    for (i = 0; i < len; i++)  // loop for the specified length
     {
-        character = UART_InChar();
+        character = UART_InChar(); // read a character from UART
         if (character != '\r')
         {
             command[i] = character;
@@ -20,7 +20,7 @@ void getCommandd(char *command, int len)
         }
         else if (character == '\r' || i == len)
         {
-            break;
+            break; // break out of the loop
         }
     }
 }
@@ -45,9 +45,9 @@ void getCommand(char *command, char stopchar)
             i++;
             // UART_OutChar(command[i]);
         }
-        else if (character[0] == stopchar)
+        else if (character[0] == stopchar)  // if the character is the stop character
         {
-            break;
+            break; // break out of the loop
         }
     }
 }
