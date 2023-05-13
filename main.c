@@ -15,7 +15,7 @@ int main(void)
 float distance_walked, prev_lat = 0, prev_lon = 0;
 float distance;
 char *str, *str1;
-char concatenated[] = "Dis: ";
+char concatenated[] = "Distance is ";
 char concatenated1[] = "Remaining is ";
 int Final_Disantce_int = 0, Remaining_Disantce_int = 0;
 char Final_Distance_string[5], Remaining_Distance_string[5];
