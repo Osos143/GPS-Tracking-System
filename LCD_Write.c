@@ -8,7 +8,7 @@
  */
 void LCD_Write4bits(unsigned char data, unsigned char control)
 {
-    data &= 0xF0;                            /// Clear lower nibble for control
+    data &= 0xF0;                            // Clear lower nibble for control
     control &= 0x0F;                         // Clear upper nibble for data
     GPIO_PORTB_DATA_R = data | control;      // Include RS value (command or data) with data
     GPIO_PORTB_DATA_R = data | control | EN; // Pulse EN
