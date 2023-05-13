@@ -1,4 +1,4 @@
-#include "main.h"
+#include "main.h" ;
 
 /**
  * Initializes Port F for input and output.
