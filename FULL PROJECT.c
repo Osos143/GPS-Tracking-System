@@ -7,7 +7,6 @@
 #include <math.h>      // Math functions
 #include "tm4c123gh6pm.h" // Header file for the TM4C123 microcontroller
 
-
 #define RS 0x01        // Bit mask for LCD RS pin
 #define RW 0x02        // Bit mask for LCD RW pin
 #define EN 0x04        // Bit mask for LCD EN pin
