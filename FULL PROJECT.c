@@ -142,20 +142,26 @@ void PortF_Init(void){
  GPIO_PORTF_DEN_R = 0x1F; // enable digital I/O on Port F 
 }
 
+// Function to convert degrees to radians
 float degrees_to_radians(float degrees) {
     return degrees * PI / 180.0;
 }
 
+// Function to calculate distance between two GPS coordinates using Haversine formula
 float haversine(float lat1, float lon1, float lat2, float lon2) {
     float dlat, dlon, a, c, d;
-	lat1=GPStoDeg(lat1);
-	lon1=GPStoDeg(lon1);
-	lat2=GPStoDeg(lat2);
-	lon2=GPStoDeg(lon2);
+    
+    // Convert GPS coordinates from degrees, minutes, seconds to decimal degrees
+    lat1=GPStoDeg(lat1);
+    lon1=GPStoDeg(lon1);
+    lat2=GPStoDeg(lat2);
+    lon2=GPStoDeg(lon2);
   
+    // Convert latitude and longitude to radians
     dlat = degrees_to_radians(lat2 - lat1);
     dlon = degrees_to_radians(lon2 - lon1);
 
+    // Calculate Haversine formula
     a = sin(dlat/2) * sin(dlat/2) + cos(degrees_to_radians(lat1)) * cos(degrees_to_radians(lat2)) * sin(dlon/2) * sin(dlon/2);
     c = 2 * atan2(sqrt(a), sqrt(1-a));
     d = EARTH_RADIUS * c;
@@ -163,6 +169,7 @@ float haversine(float lat1, float lon1, float lat2, float lon2) {
     return d;
 }
 
+// Function to initialize UART communication
 void UART_Init(void) {
     SYSCTL_RCGCUART_R |= 0x01;
     SYSCTL_RCGCGPIO_R |= 0x01;
@@ -179,87 +186,96 @@ void UART_Init(void) {
     GPIO_PORTA_AMSEL_R &= ~(0x03);
 }
 
-const double long_final=03116.75297,lat_final=3003.84861  ; 
-
+// GPS coordinates of the final destination
+const double long_final = 03116.75297;
+const double lat_final = 3003.84861;
 
 int main(void){
-		//char str[20];
-	  float distance_walked ,prev_lat = 0, prev_lon = 0;
-		float distance ;
-	
-		char* str,*str1;
-	char concatenated[]=	"Distance is ";
-		char concatenated1[]= "Remaining is ";
-		int Final_Disantce_int = 0,Remaining_Disantce_int=0;
-		char Final_Distance_string[5],Remaining_Distance_string[5];
-float Final_Disantce_float=0;
+    float distance_walked, prev_lat = 0, prev_lon = 0;
+    float distance ;
+    char* str, *str1;
+    char concatenated[] = "Distance is ";
+    char concatenated1[] = "Remaining is ";
+    int Final_Disantce_int = 0, Remaining_Disantce_int = 0;
+    char Final_Distance_string[5], Remaining_Distance_string[5];
+    float Final_Disantce_float = 0;
 
-	
-		UART_Init();
-	  PortF_Init();
-		LCD4bits_Init();
+    // Initialize UART communication, LED pins, and LCD
+    UART_Init();
+    PortF_Init();
+    LCD4bits_Init();
 		
-		while(1){
-				memset(lat,0,20);
-				memset(longi,0,20);
-			  memset(speedd,0,20);
-				GPS_read2() ;
-				distance =  haversine(currentLat ,currentLong ,lat_final ,long_final) ;
-			distance-=10;
-			if (distance <200){
-			Remaining_Disantce_int = (int)distance;
-				sprintf(Remaining_Distance_string,"%d",Remaining_Disantce_int);
-			strcpy( concatenated1,"Remaining is ");
-			strcat( concatenated1,Remaining_Distance_string);
-			
-			str = concatenated1 ;  						//Write any string you want to display on LCD
-			LCD4bits_Cmd(0x01);								//Clear the display
-			LCD4bits_Cmd(0x80);               //Force the cursor to beginning of 1st line
-			delayMs(100);											//delay 100 ms for LCD (MCU is faster than LCD)
-			LCD_WriteString(str);							//Write the string on LCD
-			delayMs(100);											//Delay 100 ms to let the LCD diplays the data
-		
-				if(distance >5){
-			GPIO_PORTF_DATA_R &= ~0x0E;  // turn off all LEDs
-			GPIO_PORTF_DATA_R |= 0x02;   // turn on red LED
-		}else if ((distance<5 && distance >2)){
-			GPIO_PORTF_DATA_R &= ~0x0E;  // turn off all LEDs
-      GPIO_PORTF_DATA_R |= 0x04;   // turn on blue LED
-				str = "YOU ALMOST THERE" ;  						//Write any string you want to display on LCD
-			LCD4bits_Cmd(0x01);								//Clear the display
-			LCD4bits_Cmd(0x80);               //Force the cursor to beginning of 1st line
-			delayMs(100);											//delay 100 ms for LCD (MCU is faster than LCD)
-			LCD_WriteString(str);							//Write the string on LCD
-			delayMs(100);											//Delay 100 ms to let the LCD diplays the data
-		
-		}else if (distance <2){
-			GPIO_PORTF_DATA_R &= ~0x0E;  // turn off all LEDs
-			GPIO_PORTF_DATA_R |= 0x08;   // turn on green LED
-			Final_Disantce_int=(int)Final_Disantce_float ;
-			sprintf(Final_Distance_string,"%d",Final_Disantce_int);
-			strcat( concatenated,Final_Distance_string);
-			
-			str1 = concatenated ;  						//Write any string you want to display on LCD
-			LCD4bits_Cmd(0x01);								//Clear the display
-			LCD4bits_Cmd(0x80);               //Force the cursor to beginning of 1st line
-			delayMs(100);											//delay 100 ms for LCD (MCU is faster than LCD)
-			LCD_WriteString(str1);							//Write the string on LCD
-			delayMs(100);											//Delay 100 ms to let the LCD diplays the data
-		
-			break;
-		}}
-		  // calculate total distance walked
-            if (prev_lat != 0 && prev_lon != 0) {
-                distance_walked = haversine(currentLat ,currentLong , prev_lat, prev_lon);
-							if (distance_walked < 5){
-                Final_Disantce_float += distance_walked;}
+    while(1){
+        // Read GPS data
+        memset(lat, 0, 20);
+        memset(longi, 0, 20);
+        memset(speedd, 0, 20);
+        GPS_read2();
+        
+        // Calculate distance between current location and final destination
+        distance = haversine(currentLat, currentLong, lat_final, long_final);
+        distance -= 10;
+        
+        // Display remaining distance and change LED color based on distance
+        if (distance < 200){
+            Remaining_Disantce_int = (int)distance;
+            sprintf(Remaining_Distance_string, "%d", Remaining_Disantce_int);
+            strcpy(concatenated1, "Remaining is ");
+            strcat(concatenated1, Remaining_Distance_string);
+            
+            str = concatenated1;
+            LCD4bits_Cmd(0x01);
+            LCD4bits_Cmd(0x80);
+            delayMs(100);
+            LCD_WriteString(str);
+            delayMs(100);
+            
+            if (distance > 5){
+                GPIO_PORTF_DATA_R &= ~0x0E;  // turn off all LEDs
+                GPIO_PORTF_DATA_R |= 0x02;   // turn on red LED
             }
-						
-            prev_lat = currentLat;
-            prev_lon = currentLong;
-		}
-			return 0;
-	}
+            else if ((distance < 5 && distance > 2)){
+                GPIO_PORTF_DATA_R &= ~0x0E;  // turn off all LEDs
+                GPIO_PORTF_DATA_R |= 0x04;   // turn on blue LED
+                
+                str = "YOU ALMOST THERE";
+                LCD4bits_Cmd(0x01);
+                LCD4bits_Cmd(0x80);
+                delayMs(100);
+                LCD_WriteString(str);
+                delayMs(100);
+            }
+            else if (distance < 2){
+                GPIO_PORTF_DATA_R &= ~0x0E;  // turn off all LEDs
+                GPIO_PORTF_DATA_R |= 0x08;   // turn on green LED
+                
+                Final_Disantce_int = (int)Final_Disantce_float ;
+                sprintf(Final_Distance_string, "%d", Final_Disantce_int);
+                strcat(concatenated, Final_Distance_string);
+                
+                str1 = concatenated;
+                LCD4bits_Cmd(0x01);
+                LCD4bits_Cmd(0x80);
+                delayMs(100);
+                LCD_WriteString(str1);
+                delayMs(100);
+                
+                break;
+            }
+        }
+        
+        // Calculate total distance walked and add to final distance
+        if (prev_lat != 0 && prev_lon != 0) {
+            distance_walked = haversine(currentLat, currentLong, prev_lat, prev_lon);
+            if (distance_walked < 5){
+                Final_Disantce_float += distance_walked;
+            }
+        }
+        prev_lat = currentLat;
+        prev_lon = currentLong;
+    }
+    return 0;
+}
 
 void LCD4bits_Init(void)
 {
