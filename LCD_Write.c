@@ -40,7 +40,7 @@ void LCD_WriteString(char *str)
  */
 void LCD4bits_Cmd(unsigned char command)
 {
-    LCD_Write4bits(command & 0xF0, 0); // Upper nibble first
+    LCD_Write4bits(command & 0xF0, 0); // upper nibble first
     LCD_Write4bits(command << 4, 0);   // Then lower nibble
 
     if (command < 4)
