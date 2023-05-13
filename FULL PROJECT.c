@@ -4,7 +4,7 @@
 #include <string.h>    // String handling functions
 #include <stdlib.h>    // Standard library functions
 #include <stdio.h>     // Standard input/output functions
-#include <math.h>      // Math functions
+#include <math.h>      
 #include "tm4c123gh6pm.h" 
 
 #define RS 0x01        // Bit mask for LCD RS pin
