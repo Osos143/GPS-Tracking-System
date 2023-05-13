@@ -13,12 +13,12 @@ void getCommandd(char *command, int len)
     for (i = 0; i < len; i++)  // loop for the specified length
     {
         character = UART_InChar(); // read a character from UART
-        if (character != '\r')
+        if (character != '\r') // if the character is not a carriage return
         {
             command[i] = character;
             UART_OutChar(command[i]);
         }
-        else if (character == '\r' || i == len)
+        else if (character == '\r' || i == len) // if the character is a carriage return or the command length has been reached
         {
             break; // break out of the loop
         }
