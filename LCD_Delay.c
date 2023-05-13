@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * Delays execution for the specified number of milliseconds
+ * Delays execution for the specified number of milliseconds.
  *
  * @param n The number of milliseconds to delay.
  */
