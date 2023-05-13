@@ -50,12 +50,12 @@ while (1)
     delayMs(100);
 
     //Change LED color based on distance
-    if (distance > 20)
+    if (distance > 5)
     {
         GPIO_PORTF_DATA_R &= ~0x0E;
         GPIO_PORTF_DATA_R |= 0x02;
     }
-    else if ((distance < 20 && distance > 5))
+    else if ((distance < 5 && distance > 2))
     {
         GPIO_PORTF_DATA_R &= ~0x0E;
         GPIO_PORTF_DATA_R |= 0x04;
@@ -66,7 +66,7 @@ while (1)
         LCD_WriteString(str);
         delayMs(100);
     }
-    else if (distance < 5)
+    else if (distance < 2)
     {
         GPIO_PORTF_DATA_R &= ~0x0E;
         GPIO_PORTF_DATA_R |= 0x08;
