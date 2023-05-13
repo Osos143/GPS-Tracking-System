@@ -1,5 +1,4 @@
 #include "main.h"
-
 /**
  * Converts degrees to radians.
  * 
