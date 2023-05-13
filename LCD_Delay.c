@@ -3,7 +3,7 @@
 /**
  * Delays execution for the specified number of milliseconds.
  *
- * @param n The number of milliseconds to delay
+ * @param n The number of milliseconds to delay.
  */
 void delayMs(int n)
 {
