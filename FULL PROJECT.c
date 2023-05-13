@@ -2,7 +2,7 @@
 #include <stdint.h>    // Standard integer data types
 #include <stdbool.h>   // Standard boolean data type
 #include <string.h>    // String handling functions
-#include <stdlib.h>    // Standard library functions
+#include <stdlib.h>
 #include <stdio.h>     
 #include <math.h>      
 #include "tm4c123gh6pm.h" 
