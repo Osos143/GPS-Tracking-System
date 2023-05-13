@@ -7,7 +7,7 @@
  */
 void delayMs(int n)
 {
-    volatile int i, j; // Volatile is important for variables incremented in code
+    volatile int i, j; // Volatile is important for variables incremented in code.
 
     for (i = 0; i < n; i++) // Loop 'n' times for the desired delay
     {
