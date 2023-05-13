@@ -49,7 +49,7 @@ void LCD4bits_Cmd(unsigned char command)
     }
     else
     {
-        delayUs(40); // All others need 40 us
+        delayUs(40); // all others need 40 us
     }
 }
 
