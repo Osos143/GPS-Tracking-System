@@ -11,7 +11,15 @@ float degrees_to_radians(float degrees)
     return degrees * PI / 180.0;
 }
 
-
+/**
+ * Calculates the great-circle distance between two points on a sphere given their longitudes and latitudes.
+ *
+ * @param lat1 The latitude of the first point in degrees.
+ * @param lon1 The longitude of the first point in degrees.
+ * @param lat2 The latitude of the second point in degrees.
+ * @param lon2 The longitude of the second point in degrees.
+ * @return The distance between the two points in meters.
+ */
 float haversine(float lat1, float lon1, float lat2, float lon2)
 {
     float dlat, dlon, a, c, d;
