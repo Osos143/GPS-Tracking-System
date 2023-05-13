@@ -8,11 +8,11 @@
 #include "tm4c123gh6pm.h"
 
 #define RS 0x01				 	//RS -> PB0 (0x01)
-#define RW 0x02         //RW -> PB1 (0x02)
+#define RW 0x02        				//RW -> PB1 (0x02)
 #define EN 0x04  		 	 	//EN -> PB2 (0x04)
 
 #define PI 3.141592653589793238
-#define EARTH_RADIUS 6371000.0 // Earth's radius in kilometers
+#define EARTH_RADIUS 6371000.0 // Earth's radius in meters
 
 char GPS_logName[]="$GPRMC,";
 char GPS[80] ;
