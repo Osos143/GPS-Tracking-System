@@ -25,7 +25,10 @@ float haversine(float lat1, float lon1, float lat2, float lon2)
     float dlat, dlon, a, c, d;
 
     // Convert latitude and longitude to decimal degrees format
-    
+    lat1 = GPStoDeg(lat1);
+    lon1 = GPStoDeg(lon1);
+    lat2 = GPStoDeg(lat2);
+    lon2 = GPStoDeg(lon2);
 
     dlat = degrees_to_radians(lat2 - lat1);
     dlon = degrees_to_radians(lon2 - lon1);
