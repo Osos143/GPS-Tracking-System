@@ -3,7 +3,7 @@
 #include <stdbool.h>   // Standard boolean data type
 #include <string.h>    // String handling functions
 #include <stdlib.h>    // Standard library functions
-#include <stdio.h>     // Standard input/output functions
+#include <stdio.h>     
 #include <math.h>      
 #include "tm4c123gh6pm.h" 
 
