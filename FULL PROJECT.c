@@ -1,7 +1,7 @@
 #include "TM4C123.h"   // Header file for the TM4C123 microcontroller
 #include <stdint.h>    // Standard integer data types
 #include <stdbool.h>   // Standard boolean data type
-#include <string.h>    // String handling functions
+#include <string.h>    
 #include <stdlib.h>
 #include <stdio.h>     
 #include <math.h>      
