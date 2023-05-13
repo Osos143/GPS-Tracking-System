@@ -24,13 +24,13 @@ char lat [20]={0} ;
  char speedd [10]={0} ;
  
 //Functions Declaration
-void delayUs(int);   														   //Delay in Micro Seconds
-void delayMs(int);   														   //Delay in Milli Seconds
-void LCD4bits_Init(void);													 //Initialization of LCD Dispaly
-void LCD_Write4bits(unsigned char, unsigned char); //Write data as (4 bits) on LCD
-void LCD_WriteString(char*);											 //Write a string on LCD 
-void LCD4bits_Cmd(unsigned char);									 //Write command 
-void LCD4bits_Data(unsigned char);								 //Write a character
+void delayUs(int);
+void delayMs(int);
+void LCD4bits_Init(void);
+void LCD_Write4bits(unsigned char, unsigned char);
+void LCD_WriteString(char*);
+void LCD4bits_Cmd(unsigned char);
+void LCD4bits_Data(unsigned char);
  
 void UART_OutChar(char data) {
     while ((UART0_FR_R & 0x20) != 0);
