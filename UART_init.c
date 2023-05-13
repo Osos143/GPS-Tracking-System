@@ -1,5 +1,5 @@
 #include "main.h"
-#
+
 /**
  * Initializes UART0 module on Port A with a baud rate of 9600.
  */
