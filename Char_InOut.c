@@ -8,10 +8,10 @@
 void UART_OutChar(char data)
 {
     // Wait until UART0 transmit FIFO is not full
-    while ((UART0_FR_R & 0x20) != 0);
+    while ((UART0_FR_R & 0x20) != 0);    // Check if the transmit FIFO is full
 
     // Write the character to the transmit FIFO
-    UART0_DR_R = data;
+    UART0_DR_R = data;             // Send the character by writing it to the transmit FIFO
 }
 
 /**
