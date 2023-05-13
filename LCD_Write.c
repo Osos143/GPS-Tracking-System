@@ -14,7 +14,7 @@ void LCD_Write4bits(unsigned char data, unsigned char control)
     GPIO_PORTB_DATA_R = data | control | EN; // Pulse EN
     delayUs(0);                              // Delay for pulsing EN
     GPIO_PORTB_DATA_R = data | control;      // Turn off the pulse EN
-    GPIO_PORTB_DATA_R = 0;                   // Clear the data
+    GPIO_PORTB_DATA_R = 0;                   // clear the data
 }
 
 /**
