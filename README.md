@@ -5,7 +5,7 @@ This project is an implementation of a GPS tracking system using the TM4C123G La
 # **Functionality**
 
 **1)** The GPS subsystem stores the coordinates of the start point.  
-**2)** Once the destination point is reached, the GPS subsystem stores the coordinates of the end point and calculates the total distance traveled by the user.  
+**2)** Once the destination point is reached, the GPS subsystem stores the coordinates of the end point and calculates the total distance traveled by the user & displaying it the LCD which is connected to the Tiva-C.  
 **3)** The system provides the following output indications:  
 Stage 1: The built-in LED turns on (green) when the target destination is reached.  
 Stage 2: The built-in LED turns on (blue) when the target destination is about to be reached (within 5 meters).  
